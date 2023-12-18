@@ -16,3 +16,7 @@ form {
 form label {
   margin-top: 2.5rem;
 }
+
+form li {
+  list-style: none;
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { validatePasswordLength,
          validatePasswordLowerCase, 
          validatePasswordUpperCase, 
@@ -6,51 +6,80 @@ import { validatePasswordLength,
          validatePasswordSpecialCharacter,
          validatePasswordMatch } from "../utils/passwordValidation";
 
-const Passwords = () => {
-    const [messages, setMessages] = useState([]);
-    const [passwordValid, setPassordValid] = useState(true);
+const Passwords = ({min, max}) => {
+    const [messages, setMessages] = useState({});
+    const [passwordValid, setPasswordValid] = useState(true);
 
-    const handlePasswordValidation = (password, newpassword) => {
+    const passwordRef = useRef();
+    const passwordConfirmRef = useRef();
+
+    const handlePasswordValidation = (e) => {
+        let message = {};
+        e.preventDefault();
+
+        const password = passwordRef.current.value;
+        const passwordConfirm = passwordConfirmRef.current.value;
+
         // check to see if password matches new password
-        if(!validatePasswordMatch(password, newpassword)) {
-            setMessages([...messages, "Passwords do not match"])
-            setPassordValid(false);
+        if(!validatePasswordMatch(password, passwordConfirm)) {
+            message.passwordMatch = "Passwords do not match";
         }
 
         // check to see if passwords contain a number
         if(!validatePasswordNumber(password)) {
-            if(!validatePasswordNumber(password)) {
-                setMessages([...messages, "Password does not contain a number"])
-                setPassordValid(false);
-            }
+            message.passwordNumber = "Password does not contain a number";
         }
 
         // check to see if password contains lowercase letter
         if(!validatePasswordLowerCase(password)) {
-            setMessages([...messages, "Password does not contain lowercase letter"])
-            setPassordValid(false);
+            message.passwordLowerCase = "Password does not contain lowercase letter";
         }
 
         // check to see if password contains uppercase letter
         if(!validatePasswordUpperCase(password)) {
-            setMessages([...messages, "Password does not contain uppercase letter"])
-            setPassordValid(false);
+            message.passwordUpperCase = "Password does not contain uppercase letter";
         }
 
         // check to see if password contains special character
         if(!validatePasswordSpecialCharacter(password)) {
-            setMessages([...messages, "Password does not contain special character"])
+            message.passwordSC = "Password does not contain special character";
         }
 
+        if(!validatePasswordLength(password, min, max)) {
+            message.passwordLength = `Password needs to be greater than ${min} characters and less than ${max}`;
+        }
+
+        if(passwordValid) {
+            message.success = "Password is Valid";
+        }
+
+        setMessages(message);
+
     }
+
+    useEffect(() => {
+        window.addEventListener("submit", handlePasswordValidation);
+        return () => {
+            window.removeEventListener("submit", handlePasswordValidation);
+        }
+    })
 
     return(
     <>
         <label htmlFor="newpassword">New Password:</label>
-        <input id="newpassword" type="password" />
+        <input id="newpassword" type="password" ref={passwordRef} />
         <label htmlFor="newPasswordConfirm">Confirm New Password</label>
-        <input id="newPasswordConfirm" type="password" />
-        <input type="submit" value="submit"/>
+        <input id="newPasswordConfirm" type="password" ref={passwordConfirmRef} />
+        
+           { messages.passwordMatch && <div>{messages.passwordMatch}</div> }
+           { messages.passwordNumber && <div>{messages.passwordNumber}</div> }
+           { messages.passwordLowerCase && <div>{messages.passwordLowerCase}</div> }
+           { messages.passwordUpperCase && <div>{messages.passwordUpperCase}</div> }
+           { messages.passwordSC && <div>{messages.passwordSC}</div> }
+           { messages.passwordLength && <div>{messages.passwordLength}</div> }
+           { messages.success && <div>{messages.success}</div> }
+        
+        <button type="submit">Submit</button>
     </>
     )
 }

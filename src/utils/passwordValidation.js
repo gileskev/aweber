@@ -1,22 +1,22 @@
-export const validatePasswordLength = (password, min, max) => {
+export const validatePasswordLength = (password = 6, min, max) => {
     let validPassword = false;
     // min length, no max length
     if(min && !max) {
-        if(password > min) {
-            validPassword = true;
+        if(password.length >= min) {
+            return validPassword = true;
         }
     }
 
     // no min length, just max length
     if(!min && max) {
-        if(password < max) {
-            validPassword = true;
+        if(password.length <= max) {
+            return validPassword = true;
         }
     }
 
     if(min && max) {
-        if(password >= min && password <= max) {
-            validPassword = true;
+        if(password.length >= min && password.length <= max) {
+            return validPassword = true;
         }
     }
     return validPassword;
@@ -24,23 +24,23 @@ export const validatePasswordLength = (password, min, max) => {
 
 export const validatePasswordUpperCase = (password) => {
     const upperCase = /[A-Z]/g;
-    return password.match(upperCase);
+    return upperCase.test(password);
 
 }
 
 export const validatePasswordLowerCase = (password) => {
     const lowerCase = /[a-z]/g;
-    return password.match(lowerCase);
+    return lowerCase.test(password);
 }
 
 export const validatePasswordSpecialCharacter = (password) => {
-    const specialChar = /(!@#$%\^&*()_-+={\[}\]|:;\\"\\'<,>.) /g;
-    return password.match(specialChar);
+    const specialChar = /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/g;
+    return specialChar.test(password);
 }
 
 export const validatePasswordNumber = (password) => {
     const number =  /[0-9]/g;
-    return password.match(number)
+    return number.test(password);
 }
 
 export const validatePasswordMatch = (password, newpassword) => {

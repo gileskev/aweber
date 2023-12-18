@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <form>
-        <Passwords/>
+        <Passwords min={8} max={20}/>
       </form>
     </div>
   );
