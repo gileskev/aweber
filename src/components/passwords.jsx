@@ -23,35 +23,41 @@ const Passwords = ({min, max}) => {
         // check to see if password matches new password
         if(!validatePasswordMatch(password, passwordConfirm)) {
             message.passwordMatch = "Passwords do not match";
+            setPasswordValid(false);
         }
 
         // check to see if passwords contain a number
-        if(!validatePasswordNumber(password)) {
+        else if(!validatePasswordNumber(password)) {
             message.passwordNumber = "Password does not contain a number";
+            setPasswordValid(false);
         }
 
         // check to see if password contains lowercase letter
-        if(!validatePasswordLowerCase(password)) {
+        else if(!validatePasswordLowerCase(password)) {
             message.passwordLowerCase = "Password does not contain lowercase letter";
+            setPasswordValid(false);
         }
 
         // check to see if password contains uppercase letter
-        if(!validatePasswordUpperCase(password)) {
+        else if(!validatePasswordUpperCase(password)) {
             message.passwordUpperCase = "Password does not contain uppercase letter";
+            setPasswordValid(false);
         }
 
         // check to see if password contains special character
-        if(!validatePasswordSpecialCharacter(password)) {
+        else if(!validatePasswordSpecialCharacter(password)) {
             message.passwordSC = "Password does not contain special character";
+            setPasswordValid(false);
         }
-
-        if(!validatePasswordLength(password, min, max)) {
+        // check to see if password is valid length
+        else if(!validatePasswordLength(password, min, max)) {
             message.passwordLength = `Password needs to be greater than ${min} characters and less than ${max}`;
+            setPasswordValid(false);
+        } else {
+            message.success = "Password is valid";
         }
 
-        if(passwordValid) {
-            message.success = "Password is Valid";
-        }
+        
 
         setMessages(message);
 
@@ -77,7 +83,7 @@ const Passwords = ({min, max}) => {
            { messages.passwordUpperCase && <div>{messages.passwordUpperCase}</div> }
            { messages.passwordSC && <div>{messages.passwordSC}</div> }
            { messages.passwordLength && <div>{messages.passwordLength}</div> }
-           { messages.success && <div>{messages.success}</div> }
+           { messages.success  && <div>{messages.success}</div> }
         
         <button type="submit">Submit</button>
     </>
